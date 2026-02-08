@@ -1575,6 +1575,8 @@ pub enum KnownFunction {
     RevealMro,
     /// `struct.unpack`
     Unpack,
+    /// `types.new_class`
+    NewClass,
 }
 
 impl KnownFunction {
@@ -1658,6 +1660,9 @@ impl KnownFunction {
             Self::ImportModule => module.is_importlib(),
             Self::Unpack => {
                 matches!(module, KnownModule::Struct)
+            }
+            Self::NewClass => {
+                matches!(module, KnownModule::Types)
             }
 
             Self::TypeCheckOnly => matches!(module, KnownModule::Typing),
@@ -2270,6 +2275,7 @@ pub(crate) mod tests {
                 KnownFunction::NamedTuple => KnownModule::Collections,
                 KnownFunction::TotalOrdering => KnownModule::Functools,
                 KnownFunction::Unpack => KnownModule::Struct,
+                KnownFunction::NewClass => KnownModule::Types,
             };
 
             let function_definition = known_module_symbol(&db, module, function_name)
